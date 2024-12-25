@@ -7,10 +7,9 @@ const {
   updateTodo,
 } = require("./controller/todos.controller");
 
-// server port
-const serverPort = "3000";
+const serverPort = "3001";
+
 const server = http.createServer((req, res) => {
-  // base config
   res.writeHead(200, { "content-type": "application/json" });
   const { method, url } = req;
   if (url === "/todos" && method === "GET") {
@@ -22,14 +21,12 @@ const server = http.createServer((req, res) => {
     removeTodo(req, res);
   } else if (url.match(/^\/todos\/[a-zA-Z0-9]+$/) && method === "POST") {
     updateTodo(req, res);
-    // removeTodo(req, res);
   } else if (url.match(/^\/todos\/[a-zA-Z0-9]+$/) && method === "GET") {
     findTodo(req, res);
-    // removeTodo(req, res);
+  } else {
+    res.write("not found");
+    res.end();
   }
-
-  // res.write({ m  essage: "not found" });
-  // res.end();
 });
 
 server.listen(serverPort, async () => {
