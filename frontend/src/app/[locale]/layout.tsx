@@ -1,15 +1,15 @@
-import { useTranslations } from "next-intl";
-import "@/styles/global.css";
+// import { GeistMono } from "geist/font/mono";
+import { GeistSans } from "geist/font/sans";
+
 import AuthGuard from "@/hoc/auth.guard";
+import "@/styles/global.css";
 
 export default function Layout(props: {
   children: React.ReactNode;
   params: { locale: string };
 }) {
-  const t = useTranslations("RootLayout");
-
   return (
-    <html lang={props.params.locale}>
+    <html lang={props.params.locale} className={GeistSans.className}>
       <body>
         <AuthGuard>{props.children}</AuthGuard>
       </body>

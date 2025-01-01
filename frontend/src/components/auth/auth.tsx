@@ -1,11 +1,12 @@
 "use client";
-import type { AuthType } from "@/types/global"; // Assuming AuthType is defined correctly in global types
+import Modal from "@/module/modal";
+import { AuthType } from "@/types/global"; // Assuming AuthType is defined correctly in global types
 import { ReactNode, useState } from "react";
 import Login from "./login";
 import Register from "./register";
 
 const Auth = () => {
-  const [position, setPosition] = useState<AuthType>(1);
+  const [position, setPosition] = useState<AuthType>(AuthType.login);
 
   const authPosition = (step: AuthType): ReactNode => {
     switch (step) {
@@ -14,11 +15,12 @@ const Auth = () => {
       case 2:
         return <Register setPosition={setPosition} />;
       default:
-        return <Register setPosition={setPosition} />;
+        console.warn("unexpected step value" + " " + position);
+        return null;
     }
   };
 
-  return <>{authPosition(position)}</>;
+  return <Modal>{authPosition(position)}</Modal>;
 };
 
 export default Auth;

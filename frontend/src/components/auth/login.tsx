@@ -1,10 +1,21 @@
-import { AuthFormProps } from "@/types/global";
+import CustomeButton from "@/module/button/Button";
+import DefaultInput from "@/module/inputs/inputDefaut";
+import { AuthFormProps, AuthType } from "@/types/global";
 
 const Login = ({ setPosition }: AuthFormProps) => {
   return (
-    <div>
-      <h1>Login Form</h1>
-      <button onClick={() => setPosition(2)}>Go to Register</button>
+    <div className="w-full">
+      <form className="flex gap-2 w-full">
+        <DefaultInput />
+        <DefaultInput />
+      </form>
+      <CustomeButton text={"Submit"} />
+      <p
+        onClick={() => setPosition(AuthType.login)}
+        className="text-xs mt-4 cursor-pointer"
+      >
+        dont have account ? register
+      </p>
     </div>
   );
 };
