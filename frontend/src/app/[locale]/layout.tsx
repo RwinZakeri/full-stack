@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import "@/styles/global.css";
+import AuthGuard from "@/hoc/auth.guard";
 
 export default function Layout(props: {
   children: React.ReactNode;
@@ -10,7 +11,7 @@ export default function Layout(props: {
   return (
     <html lang={props.params.locale}>
       <body>
-        <main>{props.children}</main>
+        <AuthGuard>{props.children}</AuthGuard>
       </body>
     </html>
   );

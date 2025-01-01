@@ -2,3 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+
+:root{
+    --primary-black : hsl(240 10% 3.9%);
+    --primary-white : hsl(0 0% 98%);
+    --dark-border : hsl(240 3.7% 15.9%);
+    --border-radius : 5px;
+}

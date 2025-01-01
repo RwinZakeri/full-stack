@@ -1,5 +1,8 @@
-// Use type safe message keys with `next-intl`
-type Messages = typeof import('../locales/en.json');
+export enum AuthType {
+  login = 1,
+  register = 2,
+}
 
-// eslint-disable-next-line
-declare interface IntlMessages extends Messages {}
+type AuthFormProps = {
+  setPosition: Dispatch<SetStateAction<AuthType>>; // Correctly typing setPosition
+};
