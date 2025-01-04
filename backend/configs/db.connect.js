@@ -11,16 +11,13 @@ class ConnectToDB {
 
   #db = null;
 
-  async connect() {
-    if (this.#db) {
-      console.log("Reusing existing database connection.");
-      return this.#db;
-    }
-
+  async #connect() {
     try {
-      const client = await MongoClient.connect(DBURL);
-
-      this.#db = client.db("rwin-todo"); // Replace "rwin-todo" with your database name
+      const client = await MongoClient.connect(DBURL, {
+        useUnifiedTopology: true,
+        maxPoolSize: 10,
+      });
+      this.#db = client.db();
       console.log("Connected to DB successfully.");
       return this.#db;
     } catch (err) {
@@ -29,10 +26,11 @@ class ConnectToDB {
     }
   }
 
-  getDb() {
+  async getDb() {
     if (!this.#db) {
-      throw new Error("Database not connected. Call `connect` first.");
+      await this.#connect();
     }
+    console.log("use existing connection");
     return this.#db;
   }
 }

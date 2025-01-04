@@ -9,9 +9,9 @@ const server = http.createServer((req, res) => {
 
   if (url === "/users" && method === "GET") {
     allUsers(req, res);
+  } else {
+    NotFound(req, res);
   }
-
-  NotFound(req, res);
 });
 
 // listen server

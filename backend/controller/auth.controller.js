@@ -3,17 +3,16 @@ const { findAll } = require("../models/user.model");
 
 const allUsers = async (req, res) => {
   try {
-    console.log("start");
     const modelResponse = await findAll();
-    console.log("end");
 
     res.writeHead(200, { "Content-Type": "application/json" });
 
-    res.write("hi");
-    // res.end();
+    res.write(JSON.stringify(modelResponse));
+    res.end();
   } catch (err) {
-    console.error("Error in userById controller:", err); //   Log error details
-    res.status(500).send("Failed to connect to DB or execute query");
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.write({ error: err });
+    res.end();
   }
 };
 
