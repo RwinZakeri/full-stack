@@ -18,10 +18,8 @@ class ConnectToDB {
     }
 
     try {
-      const client = await MongoClient.connect(DBURL, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      });
+      const client = await MongoClient.connect(DBURL);
+
       this.#db = client.db("rwin-todo"); // Replace "rwin-todo" with your database name
       console.log("Connected to DB successfully.");
       return this.#db;
@@ -40,5 +38,5 @@ class ConnectToDB {
 }
 
 // Export a single instance of the class
-const dbInstance = new ConnectToDB()
+const dbInstance = new ConnectToDB();
 module.exports = dbInstance;

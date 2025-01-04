@@ -2,13 +2,13 @@
 const { PORT, http } = require("./configs/config");
 // controllers
 const NotFound = require("./controller/notFound.controller");
-const { userById } = require("./controller/auth.controller");
+const { allUsers } = require("./controller/auth.controller");
 // server
 const server = http.createServer((req, res) => {
   const { url, method } = req;
 
   if (url === "/users" && method === "GET") {
-    userById(req, res);
+    allUsers(req, res);
   }
 
   NotFound(req, res);
