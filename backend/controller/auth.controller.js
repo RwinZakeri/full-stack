@@ -1,5 +1,10 @@
 const validateUserFields = require("../libs/validation.user.feilds");
-const { findAll, insertOneUser } = require("../models/user.model");
+const {
+  findAll,
+  insertOneUser,
+  deleteOne,
+  deleteAll,
+} = require("../models/user.model");
 
 const parseRequestBody = (req) =>
   new Promise((resolve, reject) => {
@@ -50,7 +55,66 @@ const addUsers = async (req, res) => {
   }
 };
 
+const removeUser = async (req, res) => {
+  try {
+    const id = req.url.split("/")[2];
+    const isValidObjectId = /^[a-fA-F0-9]{24}$/.test(id);
+    if (!isValidObjectId) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      return res.end(
+        JSON.stringify({
+          status: 400,
+          message: "Invalid user ID format",
+        })
+      );
+    }
+    const deleteResponse = await deleteOne(id);
+    if (!deleteResponse || deleteResponse.deletedCount === 0) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      return res.end(
+        JSON.stringify({
+          status: 404,
+          message: "User not found",
+        })
+      );
+    }
+
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(
+      JSON.stringify({
+        status: 200,
+        message: "User deleted successfully",
+      })
+    );
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.writeHead(500, { "Content-Type": "application/json" });
+    res.end(
+      JSON.stringify({
+        status: 500,
+        message: "Something went wrong",
+        error: error.message,
+      })
+    );
+  }
+};
+
+const removeAllUser = async (req, res) => {
+  const deleteAllResponse = await deleteAll();
+  res.writeHead(200, { "Content-Type": "application/json" });
+  res.end(JSON.stringify({ status: 200, message: "delete all successfully" }));
+};
+
+const loginUser = async (req, res) => {
+  const body = await JSON.parse(await parseRequestBody(req));
+  console.log(body);
+  res.end("");
+};
+
 module.exports = {
   allUsers,
   addUsers,
+  removeUser,
+  removeAllUser,
+  loginUser,
 };
