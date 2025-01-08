@@ -69,12 +69,24 @@ const deleteAll = async () => {
   }
 };
 
+const isExistUser = async (data) => {
 
-// const loginUser = 
+  const db = await dbInstance.getDb();
+  const collection = await db.collection("users");
+  const dbUserData = await collection.findOne({
+    userName: data.userName,
+    password: data.password,
+  });
+
+  return dbUserData;
+};
+
+// const loginUser =
 
 module.exports = {
   findAll,
   insertOneUser,
   deleteOne,
   deleteAll,
+  isExistUser,
 };

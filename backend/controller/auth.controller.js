@@ -1,9 +1,12 @@
+const jwt = require("jsonwebtoken");
+
 const validateUserFields = require("../libs/validation.user.feilds");
 const {
   findAll,
   insertOneUser,
   deleteOne,
   deleteAll,
+  isExistUser,
 } = require("../models/user.model");
 
 const parseRequestBody = (req) =>
@@ -107,8 +110,23 @@ const removeAllUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   const body = await JSON.parse(await parseRequestBody(req));
-  console.log(body);
-  res.end("");
+  const dbResponse = await isExistUser(body);
+
+
+  if (dbResponse) {
+    const token = jwt.sign({ id: dbResponse._id }, "hi", {
+      expiresIn: "10h",
+    });
+
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.write(JSON.stringify({ status: 200, token }));
+
+    res.end("");
+  } else {
+    res.writeHead(404, { "Content-Type": "application/json" });
+    res.write(JSON.stringify({ status: 404, message: "no use found" }));
+    res.end("");
+  }
 };
 
 module.exports = {
