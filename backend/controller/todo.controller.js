@@ -2,6 +2,7 @@ const {
   insertOneTodo,
   findTodo,
   deleteOneTodo,
+  patchTodo,
 } = require("../models/todo.model");
 const jwt = require("jsonwebtoken");
 const { deleteOne } = require("../models/user.model");
@@ -46,6 +47,7 @@ const GetTodos = async (req, res) => {
     res.writeHead(400, { "Content-Type": "application/json" });
     res.write(JSON.stringify({ status: 400, message: "no token set" }));
     res.end();
+    return;
   }
 
   try {
@@ -94,18 +96,41 @@ const deleteAllTodo = async (req, res) => {
   res.end("");
 };
 
-
-const updateTodo = async(req , res)=>{
-  const body = await JSON.parse( await parseRequestBody(req));
-  console.log(body)
-  res.end("")
-
-}
+const updateTodo = async (req, res) => {
+  const body = await JSON.parse(await parseRequestBody(req));
+  const id = req.url.split("/")[2];
+  const patchResponse = await patchTodo(id, body);
+  if (patchResponse === 0) {
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.write(
+      JSON.stringify({ status: 400, message: `No todo found with id: ${id}` })
+    );
+    res.end();
+  } else if (patchResponse > 0) {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.write(
+      JSON.stringify({
+        status: 200,
+        message: `Todo with id: ${id} updated successfully.`,
+      })
+    );
+    res.end();
+  } else {
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.write(
+      JSON.stringify({
+        status: 400,
+        message: `Todo with id: ${id} was not modified.`,
+      })
+    );
+    res.end();
+  }
+};
 
 module.exports = {
   addTodo,
   GetTodos,
   deleteTodo,
   deleteAllTodo,
-  updateTodo
+  updateTodo,
 };

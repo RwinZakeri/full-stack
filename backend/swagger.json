@@ -1,0 +1,174 @@
+openapi: 3.0.0
+info:
+  title: To-Do List API
+  version: 1.0.0
+  description: A simple API for managing users and to-dos.
+
+servers:
+  - url: http://localhost:{port}
+    description: Local server
+    variables:
+      port:
+        default: 3000
+
+paths:
+  /users:
+    get:
+      summary: Get all users
+      operationId: getAllUsers
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Add a new user
+      operationId: addUser
+      requestBody:
+        description: User data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: User added successfully
+    delete:
+      summary: Delete all users
+      operationId: deleteAllUsers
+      responses:
+        '204':
+          description: All users deleted
+
+  /users/{id}:
+    delete:
+      summary: Delete a user by ID
+      operationId: deleteUserById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: string
+      responses:
+        '204':
+          description: User deleted successfully
+
+  /login:
+    post:
+      summary: Login a user
+      operationId: loginUser
+      requestBody:
+        description: Login credentials
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        '200':
+          description: User logged in successfully
+
+  /todo:
+    get:
+      summary: Get all todos
+      operationId: getAllTodos
+      responses:
+        '200':
+          description: List of todos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Todo'
+    post:
+      summary: Add a new todo
+      operationId: addTodo
+      requestBody:
+        description: Todo data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Todo'
+      responses:
+        '201':
+          description: Todo added successfully
+
+  /todo/{id}:
+    delete:
+      summary: Delete a todo by ID
+      operationId: deleteTodoById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Todo ID
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Todo deleted successfully
+    patch:
+      summary: Update a todo by ID
+      operationId: updateTodoById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Todo ID
+          schema:
+            type: string
+      requestBody:
+        description: Updated todo data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Todo'
+      responses:
+        '200':
+          description: Todo updated successfully
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          description: User ID
+        name:
+          type: string
+          description: User name
+        email:
+          type: string
+          description: User email
+    Login:
+      type: object
+      properties:
+        email:
+          type: string
+          description: User email
+        password:
+          type: string
+          description: User password
+    Todo:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Todo ID
+        title:
+          type: string
+          description: Todo title
+        completed:
+          type: boolean
+          description: Completion status

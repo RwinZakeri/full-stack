@@ -17,7 +17,6 @@ const CustomeButton = ({
     if (onClick) {
       onClick();
     }
-    console.log("object");
   };
 
   // Map enum to string

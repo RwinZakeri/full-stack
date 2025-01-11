@@ -2,6 +2,7 @@
 import { GeistSans } from "geist/font/sans";
 
 import AuthGuard from "@/hoc/auth.guard";
+import Wapper from "@/hoc/wapper";
 import "@/styles/global.css";
 
 export default function Layout(props: {
@@ -11,7 +12,9 @@ export default function Layout(props: {
   return (
     <html lang={props.params.locale} className={GeistSans.className}>
       <body>
-        <AuthGuard>{props.children}</AuthGuard>
+        <Wapper>
+          <AuthGuard>{props.children}</AuthGuard>
+        </Wapper>
       </body>
     </html>
   );

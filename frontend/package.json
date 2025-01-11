@@ -35,6 +35,9 @@
     "@sentry/nextjs": "^8.32.0",
     "@spotlightjs/spotlight": "^2.4.2",
     "@t3-oss/env-nextjs": "^0.11.1",
+    "@tanstack/react-query": "^5.63.0",
+    "@tanstack/react-query-devtools": "^5.63.0",
+    "axios": "^1.7.9",
     "drizzle-orm": "^0.33.0",
     "geist": "^1.3.1",
     "next": "^14.2.13",
@@ -45,6 +48,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.0",
+    "react-query": "^3.39.3",
+    "react-toastify": "^11.0.2",
     "sharp": "^0.33.5",
     "zod": "^3.23.8"
   },

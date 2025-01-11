@@ -31,6 +31,20 @@ const server = http.createServer((req, res) => {
   const todo = url === "/todo";
   const todoIdRegex = /^\/todo\/([a-fA-F0-9]{24})$/;
 
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PATCH, DELETE, OPTIONS"
+  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+  // Handle preflight requests
+  if (method === "OPTIONS") {
+    res.writeHead(204);
+    res.end();
+    return;
+  }
+
   if (users && GET) {
     allUsers(req, res);
   } else if (users && POST) {

@@ -35,7 +35,6 @@ const findTodo = async (id) => {
 };
 
 const deleteOneTodo = async (id) => {
-  console.log(id);
   const db = await dbInstance.getDb();
   const collection = await db.collection("todos");
 
@@ -50,8 +49,35 @@ const deleteOneTodo = async (id) => {
   }
 };
 
+const patchTodo = async (id, data) => {
+  try {
+    const db = await dbInstance.getDb();
+    const collection = db.collection("todos");
+
+    // Ensure the `data` parameter contains valid update fields
+    const updateResponse = await collection.updateOne(
+      { _id: new ObjectId(id) },
+      { $set: data }
+    );
+
+    if (updateResponse.matchedCount === 0) {
+      console.log(`No todo found with id: ${id}`);
+    } else if (updateResponse.modifiedCount > 0) {
+      console.log(`Todo with id: ${id} updated successfully.`);
+    } else {
+      console.log(`Todo with id: ${id} was not modified.`);
+    }
+
+    return updateResponse.matchedCount;
+  } catch (error) {
+    console.error(`Failed to update todo with id: ${id}`, error);
+    throw error;
+  }
+};
+
 module.exports = {
   insertOneTodo,
   findTodo,
   deleteOneTodo,
+  patchTodo,
 };

@@ -14,3 +14,15 @@ export enum ButtonTypeGlobal {
   reset = 2,
   submit = 3,
 }
+
+export interface RegisterReduderType {
+  userName: string;
+  email: string;
+  password: string;
+  repassword: string;
+}
+
+export type LoginReducerType = {
+  userName: string;
+  password: string;
+};
