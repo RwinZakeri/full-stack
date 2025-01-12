@@ -8,6 +8,7 @@ const {
   removeUser,
   removeAllUser,
   loginUser,
+  checkToken,
 } = require("./controller/auth.controller");
 const {
   addTodo,
@@ -16,27 +17,21 @@ const {
   deleteAllTodo,
   updateTodo,
 } = require("./controller/todo.controller");
-// server
+
+// Create server
 const server = http.createServer((req, res) => {
   const { url, method } = req;
-  // methods variable
-  const GET = method === "GET";
-  const POST = method === "POST";
-  const PATCH = method === "PATCH";
-  const DELETE = method === "DELETE";
-  // routes variable
-  const users = url === "/users";
-  const userIdRegex = /^\/users\/([a-fA-F0-9]{24})$/;
-  const login = url === "/login";
-  const todo = url === "/todo";
-  const todoIdRegex = /^\/todo\/([a-fA-F0-9]{24})$/;
 
+  // Set CORS headers to allow all origins, methods, and headers
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, POST, PATCH, DELETE, OPTIONS"
   );
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, token"
+  );
 
   // Handle preflight requests
   if (method === "OPTIONS") {
@@ -45,6 +40,19 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // Define routes and methods
+  const GET = method === "GET";
+  const POST = method === "POST";
+  const PATCH = method === "PATCH";
+  const DELETE = method === "DELETE";
+
+  const users = url === "/users";
+  const userIdRegex = /^\/users\/([a-fA-F0-9]{24})$/;
+  const login = url === "/login";
+  const todo = url === "/todo";
+  const todoIdRegex = /^\/todo\/([a-fA-F0-9]{24})$/;
+  const isUserExist = url === "/isexist"
+  // Route handling
   if (users && GET) {
     allUsers(req, res);
   } else if (users && POST) {
@@ -63,12 +71,14 @@ const server = http.createServer((req, res) => {
     deleteTodo(req, res);
   } else if (todoIdRegex.test(url) && PATCH) {
     updateTodo(req, res);
+  }else if(isUserExist && GET){
+    checkToken(req , res)
   } else {
     NotFound(req, res);
   }
 });
 
-// listen server
+// Start server
 server.listen(PORT, () => {
-  console.log(`server runs on http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });

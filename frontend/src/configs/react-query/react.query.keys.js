@@ -1,6 +1,7 @@
  const QueryKey = {
     registerUser : "register-user" , 
-    loginUser: "login-user"
+    loginUser: "login-user" , 
+    isloggedIn : "islogged-in" 
 }
 
 

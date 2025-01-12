@@ -68,18 +68,27 @@ const Register = ({ setPosition }: AuthFormProps) => {
 
       if (Object.keys(validationErrors).length > 0) {
         setErrors(validationErrors);
-        throw new Error("Validation failed");
+        throw new Error(`
+        ${validationErrors?.userName || ""}   
+        ${validationErrors?.email || ""}  
+        ${validationErrors?.password || ""} 
+        ${validationErrors?.repassword || ""}
+        `);
       }
 
       // Make API call
-      return await AXIOS.post("/users", state);
+      console.log(state);
+      return await AXIOS.post("http://localhost:3001/users", state);
     },
-    onError: () => {
-      toast.error("Failed to register");
+
+    onError: (err) => {
+      toast.error(`${err}`);
     },
-    onSuccess: () => {
+    onSuccess: (res) => {
       toast.success("Registered successfully");
+      console.log(res);
       dispatch({ type: "reset" }); // Reset form state
+      setPosition(AuthType.login);
     },
   });
 

@@ -112,7 +112,6 @@ const loginUser = async (req, res) => {
   const body = await JSON.parse(await parseRequestBody(req));
   const dbResponse = await isExistUser(body);
 
-
   if (dbResponse) {
     const token = jwt.sign({ id: dbResponse._id }, "hi", {
       expiresIn: "10h",
@@ -124,9 +123,30 @@ const loginUser = async (req, res) => {
     res.end("");
   } else {
     res.writeHead(404, { "Content-Type": "application/json" });
-    res.write(JSON.stringify({ status: 404, message: "no use found" }));
+    res.write(JSON.stringify({ status: 404, message: "no user found" }));
     res.end("");
   }
+};
+
+const checkToken = (req, res) => {
+  const token = req.headers["token"];
+  if (!token) {
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.write(JSON.stringify({ status: 400, message: "no token set" }));
+    res.end();
+    return;
+  }
+
+  try {
+    const jwtDecoded = jwt.verify(token, "hi").id;
+    console.log("token", jwtDecoded);
+  } catch (err) {
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.write(JSON.stringify({ status: 400, message: "invalid token" }));
+    res.end();
+    return;
+  }
+  res.end("don");
 };
 
 module.exports = {
@@ -135,4 +155,5 @@ module.exports = {
   removeUser,
   removeAllUser,
   loginUser,
+  checkToken,
 };

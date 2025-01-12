@@ -1,7 +1,7 @@
 "use client";
 import Modal from "@/module/modal";
 import { AuthType } from "@/types/global"; // Assuming AuthType is defined correctly in global types
-import { ReactNode, useState } from "react";
+import { ReactNode, Suspense, useState } from "react";
 import Login from "./login";
 import Register from "./register";
 
@@ -20,7 +20,14 @@ const Auth = () => {
     }
   };
 
-  return <Modal>{authPosition(position)}</Modal>;
+  return (
+    <div className="w-full h-screen bg-white">
+      hello world
+      <Modal>
+        <Suspense fallback={"loading..."}>{authPosition(position)}</Suspense>{" "}
+      </Modal>
+    </div>
+  );
 };
 
 export default Auth;

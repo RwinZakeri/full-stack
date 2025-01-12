@@ -58,22 +58,33 @@ const Login = ({ setPosition }: AuthFormProps) => {
   const mutation = useMutation({
     mutationKey: [QueryKey.loginUser],
     mutationFn: async () => {
+      // @ts-ignore tempignore
+
       const validationErrors = AuthValidator(state, "login");
 
       if (Object.keys(validationErrors).length > 0) {
         setErrors(validationErrors);
-        throw new Error("Validation failed");
+        throw new Error(
+          `${validationErrors.userName}
+           ${validationErrors.password}`
+        );
       }
 
       // Make API call
       const response = await AXIOS.post("/login", state);
       return response;
     },
-    onError: () => {
-      toast.error("Failed to log in");
+    onError: (err) => {
+      // @ts-ignore tempignore
+      if (err.status == 404) {
+        // @ts-ignore tempignore
+
+        toast.error(`${err.response.data.message}`);
+      } else {
+        toast.error(`${err}`);
+      }
     },
     onSuccess: (data) => {
-      console.log(data);
       toast.success("Logged in successfully");
 
       // Save token to localStorage upon successful login
@@ -81,6 +92,7 @@ const Login = ({ setPosition }: AuthFormProps) => {
 
       // Reset form state if desired
       dispatch({ type: "reset" });
+      window.location.reload();
     },
   });
 
