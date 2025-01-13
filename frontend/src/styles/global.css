@@ -5,7 +5,11 @@
 :root {
   --primary-black: hsl(240 10% 3.9%);
   --primary-light-black: rgba(0, 0, 0, 0.1);
+  --primary-gray: #71717a;
   --primary-white: hsl(0 0% 98%);
   --dark-border: hsl(240 3.7% 15.9%);
+  --btn-bg-color : #f4f4f5;
   --border-radius: 5px;
+  --border-color: rgb(228, 228, 231);
+  --border-text-color: rgb(9, 9, 11);
 }

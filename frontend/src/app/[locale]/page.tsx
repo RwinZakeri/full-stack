@@ -1,7 +1,9 @@
+import Tasks from "@/components/tasks/tasks";
+
 const HomePage = () => {
   return (
-    <div className="bg-red-500">
-      <h1>hello world</h1>
+    <div className="max-w-[1500px] mx-auto ">
+      <Tasks />
     </div>
   );
 };
