@@ -9,7 +9,7 @@ import { ReactNode, useState } from "react";
 const AuthGuard = ({ children }: { children: ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<Boolean>(false);
 
-  const { data, isLoading, error } = useQuery({
+  const { isLoading } = useQuery({
     queryKey: [QueryKey.isloggedIn],
     queryFn: async () => {
       const res = await AXIOS.get("/isexist");

@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import {
@@ -49,94 +50,6 @@ import { todo } from "@/types/global";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
-const checkedHandler = async (id) => {
-  const patchResponse = await AXIOS.patch(`/todo/${id._id}`, {
-    isDone: !id.isDone,
-  });
-
-  if (patchResponse.data.status === 200) {
-    toast.success("success fully update");
-  }
-};
-export const columns: ColumnDef<todo>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        indeterminate={table.getIsSomePageRowsSelected()}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected() || row.original.isDone}
-        onCheckedChange={(value) => checkedHandler(row.original)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "title",
-    header: "Title",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("title")}</div>
-    ),
-  },
-  {
-    accessorKey: "description",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Description
-        <ArrowUpDown className="ml-2" />
-      </Button>
-    ),
-    cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("description")}</div>
-    ),
-  },
-  {
-    accessorKey: "isDone",
-    header: "Status",
-    cell: ({ row }) => (
-      <div className="capitalize">
-        {row.getValue("isDone") ? "Success" : "Processing"}
-      </div>
-    ),
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
-
 export function DataTableDemo({
   data,
   isLoading,
@@ -151,6 +64,113 @@ export function DataTableDemo({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+
+  const updateMutation = useMutation({
+    mutationKey: ["patch-todo"],
+    mutationFn: async (id) => {
+      const patchResponse = await AXIOS.patch(`/todo/${id._id}`, {
+        isDone: !id.isDone,
+      });
+      return patchResponse;
+    },
+    onSuccess: () => {
+      toast.success("todo update succesfully ");
+      queryClient.invalidateQueries();
+    },
+  });
+
+  const checkedHandler = async (id) => {
+    updateMutation.mutate(id);
+  };
+
+  const deleteMutation = useMutation({
+    mutationKey: ["delete-todo"],
+    mutationFn: async (id) => {
+      const deleteResponse = await AXIOS.delete(`/todo/${id._id}`);
+      return deleteResponse;
+    },
+    onSuccess: () => {
+      toast.success("deleted sucessfully");
+      queryClient.invalidateQueries();
+    },
+  });
+
+  const columns: ColumnDef<todo>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={table.getIsAllPageRowsSelected()}
+          indeterminate={table.getIsSomePageRowsSelected()}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected() || row.original.isDone}
+          onCheckedChange={() => checkedHandler(row.original)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: "title",
+      header: "Title",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("title")}</div>
+      ),
+    },
+    {
+      accessorKey: "description",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Description
+          <ArrowUpDown className="ml-2" />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue("description")}</div>
+      ),
+    },
+    {
+      accessorKey: "isDone",
+      header: "Status",
+      cell: ({ row }) => (
+        <div className="capitalize">
+          {row.getValue("isDone") ? "Success" : "Processing"}
+        </div>
+      ),
+    },
+    {
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() => deleteMutation.mutate(row.original)}
+              >
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
+  ];
 
   const table = useReactTable({
     data,

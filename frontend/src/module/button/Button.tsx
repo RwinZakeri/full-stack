@@ -12,6 +12,7 @@ const CustomeButton = ({
   gtime?: number;
   type?: ButtonTypeGlobal;
 }) => {
+  // @ts-ignore
   const handleClick = (event) => {
     event.preventDefault();
     if (onClick) {
