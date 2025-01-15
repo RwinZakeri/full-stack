@@ -1,6 +1,4 @@
-// configs
 const { PORT, http } = require("./configs/config");
-// controllers
 const NotFound = require("./controller/notFound.controller");
 const {
   allUsers,
@@ -18,12 +16,19 @@ const {
   updateTodo,
 } = require("./controller/todo.controller");
 
-// Create server
-const server = http.createServer((req, res) => {
-  const { url, method } = req;
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://your-production-domain.com",
+];
 
-  // Set CORS headers to allow all origins, methods, and headers
-  res.setHeader("Access-Control-Allow-Origin", "*");
+const server = http.createServer((req, res) => {
+  const { url, method, headers } = req;
+
+  // CORS headers
+  const origin = headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, POST, PATCH, DELETE, OPTIONS"
@@ -32,19 +37,16 @@ const server = http.createServer((req, res) => {
     "Access-Control-Allow-Headers",
     "Content-Type, Authorization, token"
   );
+  res.setHeader("Access-Control-Allow-Credentials", "true");
 
   // Handle preflight requests
   if (method === "OPTIONS") {
-    res.writeHead(204, {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization, token",
-    });
+    res.writeHead(204);
     res.end();
     return;
   }
 
-  // Define routes and methods
+  // Route handling
   const GET = method === "GET";
   const POST = method === "POST";
   const PATCH = method === "PATCH";
@@ -57,7 +59,6 @@ const server = http.createServer((req, res) => {
   const todoIdRegex = /^\/todo\/([a-fA-F0-9]{24})$/;
   const isUserExist = url === "/isexist";
 
-  // Route handling
   if (users && GET) {
     allUsers(req, res);
   } else if (users && POST) {
@@ -83,7 +84,6 @@ const server = http.createServer((req, res) => {
   }
 });
 
-// Start server
 server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
