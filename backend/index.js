@@ -35,7 +35,11 @@ const server = http.createServer((req, res) => {
 
   // Handle preflight requests
   if (method === "OPTIONS") {
-    res.writeHead(204);
+    res.writeHead(204, {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization, token",
+    });
     res.end();
     return;
   }
@@ -51,7 +55,8 @@ const server = http.createServer((req, res) => {
   const login = url === "/login";
   const todo = url === "/todo";
   const todoIdRegex = /^\/todo\/([a-fA-F0-9]{24})$/;
-  const isUserExist = url === "/isexist"
+  const isUserExist = url === "/isexist";
+
   // Route handling
   if (users && GET) {
     allUsers(req, res);
@@ -71,8 +76,8 @@ const server = http.createServer((req, res) => {
     deleteTodo(req, res);
   } else if (todoIdRegex.test(url) && PATCH) {
     updateTodo(req, res);
-  }else if(isUserExist && GET){
-    checkToken(req , res)
+  } else if (isUserExist && GET) {
+    checkToken(req, res);
   } else {
     NotFound(req, res);
   }
