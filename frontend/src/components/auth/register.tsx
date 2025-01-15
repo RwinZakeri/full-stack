@@ -78,7 +78,10 @@ const Register = ({ setPosition }: AuthFormProps) => {
 
       // Make API call
       console.log(state);
-      return await AXIOS.post("http://localhost:3001/users", state);
+      return await AXIOS.post(
+        "https://full-stack-18fb.vercel.app/users",
+        state
+      );
     },
 
     onError: (err) => {

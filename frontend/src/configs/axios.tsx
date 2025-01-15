@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create an Axios instance
 const AXIOS = axios.create({
-  baseURL: "http://localhost:3001", // Your API base URL
+  baseURL: "https://full-stack-18fb.vercel.app", // Your API base URL
 });
 
 // Add request interceptor to include the token
