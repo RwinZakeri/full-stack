@@ -18,9 +18,9 @@ const TaskItemsTable = () => {
         </button>
       </div>
       {/* main items */}
-      <table className="w-full mt-[18px] table-auto border-collapse caption-bottom	rounded-lg">
-        <thead className="bg-blue-500 border-[1px] rounded-lg border-solid border-black px-3">
-          <tr className="rounded-lg">
+      <table className="w-full mt-[18px] block table-auto rounded-lg border-collapse caption-bottom">
+        <thead className="bg-blue-500 border-[1px] rounded-lg border-solid border-black px-8">
+          <tr className="rounded-lg px-98">
             <th className="w-4 mt-1 text-left flex items-center">
               <label className="container">
                 <input type="checkbox" />
