@@ -26,3 +26,10 @@ export type LoginReducerType = {
   userName: string;
   password: string;
 };
+
+export type todo = {
+  id: string;
+  title: string;
+  description?: string;
+  isDone: "processing" | "success";
+};
